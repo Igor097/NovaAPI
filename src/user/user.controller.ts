@@ -7,34 +7,34 @@ import {
 	Post,
 	Put,
 } from '@nestjs/common';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
+	constructor(private userService: UserService) {}
+
 	@Get()
 	getAll(): string {
-		return 'All Users';
+		return this.userService.getAll();
 	}
 
 	@Get(':id')
 	getUserById(@Param() params): string {
-		return `User ${params.id}`;
+		return this.userService.getUserById();
 	}
 
 	@Post()
 	createUser(@Body() user): string {
-		console.log(user);
-		return `User create : ${user}`;
+		return this.userService.createUser();
 	}
 
 	@Put()
 	updateUser(@Body() user): string {
-		console.log(user);
-		return 'User update change';
+		return this.userService.updateUser();
 	}
 
 	@Delete(':id')
 	deleteUser(@Param() params): string {
-		console.log(params);
-		return 'User delete';
+		return this.userService.deleteUser();
 	}
 }
