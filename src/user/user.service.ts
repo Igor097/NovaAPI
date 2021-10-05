@@ -31,7 +31,7 @@ export class UserService {
 			data,
 		});
 	}
-	updateUser(params: {
+	async updateUser(params: {
 		where: Prisma.UserWhereUniqueInput;
 		data: Prisma.UserUpdateInput;
 	}): Promise<User> {
@@ -41,7 +41,7 @@ export class UserService {
 			where,
 		});
 	}
-	deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
+	async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
 		return this.prisma.user.delete({
 			where,
 		});
