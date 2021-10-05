@@ -56,7 +56,7 @@ export class UserController {
 		});
 	}
 
-	@Put('id')
+	@Put(':id')
 	async updateUser(@Body() user): Promise<User> {
 		return this.userService.updateUser({
 			where: { userId: Number(user.id) },
