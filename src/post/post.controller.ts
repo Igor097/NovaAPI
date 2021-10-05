@@ -7,6 +7,7 @@ import {
 	Post,
 	Put,
 } from '@nestjs/common';
+import { Post as NPost } from '@prisma/client';
 import { PostService } from './post.service';
 
 @Controller('post')
@@ -14,27 +15,50 @@ export class PostController {
 	constructor(private postService: PostService) {}
 
 	@Get()
-	getAllPosts(): string {
-		return this.postService.getAllPosts();
+	async getAllPosts(): Promise<NPost[]> {
+		return this.postService.getAllPosts({});
 	}
 
 	@Get(':id')
-	getPostById(@Param() params): string {
-		return this.postService.getPostById();
+	async getPostById(@Param() params): Promise<NPost> {
+		return this.postService.getPostById({
+			postId: Number(params.id),
+		});
 	}
 
 	@Post()
-	createPost(@Body() post): string {
-		return this.postService.createPost();
+	async createPost(
+		@Body()
+		post: {
+			title: string;
+			subtitle: string;
+			content: string;
+			published: boolean;
+			publicationDate: Date;
+		},
+	): Promise<NPost> {
+		const { title, subtitle, content, published, publicationDate } = post;
+		return this.postService.createPost({
+			title,
+			subtitle,
+			content,
+			published,
+			publicationDate,
+		});
 	}
 
-	@Put()
-	updateUser(@Body() post): string {
-		return this.postService.updatePost();
+	@Put(':id')
+	async updateUser(@Body() post): Promise<NPost> {
+		return this.postService.updatePost({
+			where: { postId: Number(post.id) },
+			data: { ...post },
+		});
 	}
 
 	@Delete(':id')
-	deletePost(@Param() Params): string {
-		return this.postService.deletePost();
+	async deletePost(@Param() params): Promise<NPost> {
+		return this.postService.deletePost({
+			postId: Number(params.id),
+		});
 	}
 }
