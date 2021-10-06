@@ -7,34 +7,50 @@ import {
 	Post,
 	Put,
 } from '@nestjs/common';
+import { Category } from '@prisma/client';
 import { CategoryService } from './category.service';
 
 @Controller('category')
 export class CategoryController {
-	constructor(private categoryService: CategoryService) {}
+	constructor(private readonly categoryService: CategoryService) {}
 
 	@Get()
-	getAllCategories(): string {
-		return this.categoryService.getAllCategories();
+	async getAllCategories(): Promise<Category[]> {
+		return this.categoryService.getAllCategories({});
 	}
 
 	@Get(':id')
-	getCategoryById(@Param() params): string {
-		return this.categoryService.getCategoryById();
+	async getCategoryById(@Param() params): Promise<Category> {
+		return this.categoryService.getCategoryById({
+			categoryId: Number(params.id),
+		});
 	}
 
 	@Post()
-	createCategory(@Body() category): string {
-		return this.categoryService.createCategory();
+	async createCategory(
+		@Body()
+		category: {
+			name: string;
+		},
+	): Promise<Category> {
+		const { name } = category;
+		return this.categoryService.createCategory({
+			name,
+		});
 	}
 
-	@Put()
-	updateCategory(@Body() category): string {
-		return this.categoryService.updateCategory();
+	@Put(':id')
+	async updateCategory(@Body() category): Promise<Category> {
+		return this.categoryService.updateCategory({
+			where: { categoryId: Number(category.id) },
+			data: { ...category },
+		});
 	}
 
 	@Delete(':id')
-	deleteCategory(@Param() params): string {
-		return this.categoryService.deleteCategory();
+	async deleteCategory(@Param() params): Promise<Category> {
+		return this.categoryService.deleteCategory({
+			categoryId: Number(params.id),
+		});
 	}
 }
