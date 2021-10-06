@@ -12,7 +12,7 @@ import { PostService } from './post.service';
 
 @Controller('post')
 export class PostController {
-	constructor(private postService: PostService) {}
+	constructor(private readonly postService: PostService) {}
 
 	@Get()
 	async getAllPosts(): Promise<NPost[]> {
